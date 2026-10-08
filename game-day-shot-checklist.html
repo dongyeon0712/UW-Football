@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5b6f52">
+<title>Game Day Shot Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: #faf9f4;
+    font-family: 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+    color: #1c1c1a;
+    line-height: 1.45;
+  }
+  .card { max-width: 560px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; background: #faf9f4; }
+  header {
+    position: sticky; top: 0; z-index: 2;
+    background: #5b6f52;
+    padding: calc(env(safe-area-inset-top) + 20px) max(20px, env(safe-area-inset-right)) 14px max(20px, env(safe-area-inset-left));
+  }
+  header h1 { font-size: 24px; font-weight: 900; color: #fff; }
+  .sub { display: flex; align-items: center; gap: 12px; margin-top: 8px; font-size: 14px; font-weight: 700; color: #e9efe2; }
+  .bar { flex: 1; height: 6px; background: rgba(255,255,255,.25); border-radius: 3px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: #f6e6c4; transition: width .2s; }
+  main {
+    padding: 20px max(16px, env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 32px) max(16px, env(safe-area-inset-left));
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  section { display: flex; flex-direction: column; gap: 8px; }
+  h2 { background: #c7d6ba; color: #2c3a26; font-size: 16px; font-weight: 700; padding: 10px 14px; border-radius: 8px; }
+  label {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 16px; padding: 10px 4px; min-height: 48px; cursor: pointer;
+  }
+  label.key { background: #f6e6c4; padding: 12px; border-radius: 8px; color: #2c3a26; }
+  input {
+    appearance: none; -webkit-appearance: none; flex: none;
+    width: 26px; height: 26px; margin-top: 1px;
+    background: #fff; border: 2px solid #5b6f52; border-radius: 6px; position: relative;
+  }
+  label.key input { border-color: #e8b04b; }
+  input:checked { background: #5b6f52; }
+  label.key input:checked { background: #e8b04b; }
+  input:checked::after {
+    content: ""; position: absolute; left: 8px; top: 2px; width: 6px; height: 13px;
+    border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(45deg);
+  }
+  input:focus-visible { outline: 3px solid #2c3a26; outline-offset: 2px; }
+  input:checked + span { color: #8a8a82; text-decoration: line-through; }
+  b { font-weight: 700; }
+  button {
+    font: inherit; font-size: 14px; font-weight: 700; color: #2c3a26;
+    background: #c7d6ba; border: 0; border-radius: 8px; padding: 12px; min-height: 44px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header>
+    <h1>Game Day Shot Checklist</h1>
+    <div class="sub"><span id="count">0 / 10</span><div class="bar"><i id="fill"></i></div></div>
+  </header>
+  <main>
+    <section>
+      <h2>The ritual (pattern)</h2>
+      <label><input type="checkbox"><span>① <b>The walk in.</b> A wide shot of the crowd walking toward the stadium gate. Shoot from behind or the side so the crowd is the subject.</span></label>
+      <label><input type="checkbox"><span>② <b>The tailgate.</b> Tents, grills, purple and gold, groups mid-conversation. Keep faces small or turned away.</span></label>
+      <label><input type="checkbox"><span>③ <b>The stands fill.</b> A wide shot of the rows filling up. Take it from your seat or the concourse about 20 minutes before kickoff.</span></label>
+      <label><input type="checkbox"><span>④ <b>The crowd rises.</b> Fans standing with their arms up. Shoot it at the first big play or the team's entrance.</span></label>
+    </section>
+    <section>
+      <h2>The build (anticipation)</h2>
+      <label><input type="checkbox"><span>⑤ <b>The scoreboard.</b> Close on the score and the clock. Pick a tight moment, such as the fourth quarter or a one-score game.</span></label>
+      <label><input type="checkbox"><span>⑥ <b>The ball in the air.</b> The ball in the air over the field, with dark heads in the foreground if you can.</span></label>
+    </section>
+    <section>
+      <h2>The slow-down (time)</h2>
+      <label><input type="checkbox"><span>⑦ <b>The clock.</b> The game clock or play clock ticking down. Shoot it two or three times in a row so you can show it getting lower.</span></label>
+      <label><input type="checkbox"><span>⑧ <b>The play, far.</b> A wide shot of the field mid-play, with the players tiny.</span></label>
+      <label><input type="checkbox"><span>⑨ <b>The play, close.</b> The ball or a player in tight focus, as close as your zoom allows.</span></label>
+    </section>
+    <section>
+      <h2>The payoff</h2>
+      <label class="key"><input type="checkbox"><span>⑩ <b>The reaction.</b> One face with a big reaction, such as wide eyes or an open mouth. A friendly stranger in the row near you works, or you can take a selfie.</span></label>
+    </section>
+    <button type="button" id="reset">Reset checklist</button>
+  </main>
+</div>
+<script>
+  const boxes = [...document.querySelectorAll('input')];
+  const KEY = 'game-day-shots';
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(boxes.map(b => b.checked))); } catch (e) {} };
+  const update = () => {
+    const n = boxes.filter(b => b.checked).length;
+    document.getElementById('count').textContent = n + ' / ' + boxes.length;
+    document.getElementById('fill').style.width = (n / boxes.length * 100) + '%';
+  };
+  try { (JSON.parse(localStorage.getItem(KEY)) || []).forEach((v, i) => { if (boxes[i]) boxes[i].checked = v; }); } catch (e) {}
+  boxes.forEach(b => b.addEventListener('change', () => { save(); update(); }));
+  document.getElementById('reset').addEventListener('click', () => {
+    if (confirm('Clear all checks?')) { boxes.forEach(b => b.checked = false); save(); update(); }
+  });
+  update();
+</script>
+</body>
+</html>
